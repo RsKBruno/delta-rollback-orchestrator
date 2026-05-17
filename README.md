@@ -10,6 +10,7 @@ This is a process a team hopes to never use, as it acts as an "emergency button.
 The premise is simple in concept but critical in execution: use Delta Lake's Time Travel to perform a mass rollback of distributed tables across multiple **schemas** to the last stable version of a specific day (or, using the default behavior, the latest update from the previous day). In a single run, the notebook can handle dozens of tables scattered across dozens of **schemas**, identifying the exact version each one should revert to.
 
 The project was built on Databricks but, with small adjustments, it can run on any Spark engine that supports the Delta Lake format regardless of the underlying cloud provider. The only Databricks-specific pieces are `dbutils.widgets` for parameter input and the Unity Catalog `three-part namespace`; both can be swapped out with minimal effort.
+
 ---
 
 ## **1. 🎛️ Parameters (Widgets) and Operation Modes**
