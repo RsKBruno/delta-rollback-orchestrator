@@ -6,11 +6,11 @@
 
 <br>
 
-This is a process a team hopes to never use, as it acts as an "emergency button." **Imagine** a bad deployment or a malfunctioning routine reaches a layer causing inconsistencies or corrupted data in many schemas and tables, this is the fastest way to revert everything to the previous stable state without needing to reprocess pipelines or take reports offline while deciding what to do.
+This is a process every data team hopes to never use, a true 'emergency button'. **Imagine** a bad deployment or a bug corrupts data across many schemas and tables. This tool provides the fastest way to revert everything back to a stable state. You avoid the headache of rerunning pipelines or pulling reports down while you investigate.
 
-The premise is simple in concept but critical in execution: use Delta Lake's Time Travel to perform a mass rollback of distributed tables across multiple **schemas** to the last stable version of a specific day (or, using the default behavior, the latest update from the previous day). In a single run, the notebook can handle dozens of tables scattered across dozens of **schemas**, identifying the exact version each one should revert to.
+The idea is simple but highly effective: it uses Delta Lake's Time Travel to perform a mass rollback. In a single run, the notebook checks dozens of tables across multiple schemas and automatically finds the exact version each one should revert to. It restores the data to the last stable state of a specific date, or simply defaults to the latest update from the previous day.
 
-The project was built on Databricks but, with small adjustments, it can run on any Spark engine that supports the Delta Lake format regardless of the underlying cloud provider. The only Databricks-specific pieces are `dbutils.widgets` for parameter input and the Unity Catalog `three-part namespace`; both can be swapped out with minimal effort.
+Although built on Databricks, the code is very flexible. With small adjustments, it can run on any Spark engine that supports Delta Lake, regardless of your cloud provider. The only Databricks-specific parts are dbutils.widgets for parameter inputs and the Unity Catalog three-part namespace, both of which can be easily replaced.
 
 ---
 
