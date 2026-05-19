@@ -1,11 +1,12 @@
+<img width="1280" height="640" alt="Delta Rollback Orchestrator" src="https://github.com/user-attachments/assets/30e4062a-71d2-49e4-8312-a312716c7a5f" />
 
----
+
 
 # **The Mass Emergency Button for Restoring Tables to a Stable Version**
 
 <br>
 
-This is a process a team hopes to never use, as it acts as an "emergency button." When a bad deployment or a malfunctioning routine reaches a layer causing inconsistencies or corrupted data, this is the fastest way to revert everything to the previous stable state without needing to reprocess pipelines or take reports offline while deciding what to do.
+This is a process a team hopes to never use, as it acts as an "emergency button." **Imagine** a bad deployment or a malfunctioning routine reaches a layer causing inconsistencies or corrupted data in many schemas and tables, this is the fastest way to revert everything to the previous stable state without needing to reprocess pipelines or take reports offline while deciding what to do.
 
 The premise is simple in concept but critical in execution: use Delta Lake's Time Travel to perform a mass rollback of distributed tables across multiple **schemas** to the last stable version of a specific day (or, using the default behavior, the latest update from the previous day). In a single run, the notebook can handle dozens of tables scattered across dozens of **schemas**, identifying the exact version each one should revert to.
 
@@ -138,23 +139,23 @@ The heart of the process. For each combination (schema × table), the flow is:
 
 Below, `failures` and `successes` are counters used to track how many operations were executed successfully or failed. It will also describe why the operation was ignored or failed (e.g., `ignored_...`).
 ```text
-does the table exist? ──── no ──→ ignore (ignored_nonexistent)
+does the table exist? ──── no ──→ skip (skipped_not_found_count)
        │
       yes
        │
-is it Delta format? ──── no ──→ ignore (ignored_not_delta)
+is it Delta format?   ──── no ──→ skip (skipped_not_delta_count)
        │
       yes
        │
-is there a commit on target date? ── no ──→ ignore (ignored_no_commit)
+is there a commit on target date? ── no ──→ skip (skipped_no_commit_count)
        │
       yes
        │
-is the mode execute? ──── no ──→ dry_run (prints command, successes++)
+is the mode execute?  ──── no ──→ dry_run (prints command, success_count ++)
        │
       yes
        │
 triggers RESTORE TABLE ... TO VERSION AS OF <id>
        │
-       success? ── yes → successes++
-                   └── no → failures++ + adds to failure_list
+       success?        ── yes → success_count ++
+                       └─ no → failure_count ++ & adds to failed_tables 
